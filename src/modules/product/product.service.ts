@@ -9,7 +9,7 @@ const createProductIntoDb = async (payload: TProductItem) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getProductIntoDb = async (payload: any) => {
   const { search, min, max, sort } = payload;
-
+  const sortOrder = sort === 'asc' ? 1 : -1;
   const searchableFields = ['title', 'brand'];
   if (search) {
     const searchValues = await Product.aggregate([
@@ -20,15 +20,16 @@ const getProductIntoDb = async (payload: any) => {
           }),
         },
       },
+      {
+        $sort: { price: sortOrder },
+      },
     ]);
     const result = searchValues;
     return result;
   } else if (min && max) {
-    const result = Product.find({ price: { $gte: min, $lte: max } });
-    return result;
-  } else if (sort) {
-    const sortOrder = sort === 'asc' ? 1 : -1;
-    const result = Product.find().sort({ price: sortOrder });
+    const result = Product.find({ price: { $gte: min, $lte: max } }).sort({
+      price: sortOrder,
+    });
     return result;
   } else {
     const result = await Product.find({});

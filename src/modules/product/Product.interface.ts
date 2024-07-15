@@ -7,3 +7,10 @@ export type TProductItem = {
   rating: string;
   description: string;
 };
+
+export type Payload = {
+  search?: string;
+  min?: number;
+  max?: number;
+  sort?: 'asc' | 'desc';
+};
