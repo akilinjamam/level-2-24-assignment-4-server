@@ -8,7 +8,7 @@ const createProductIntoDb = async (payload: TProductItem) => {
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getProductIntoDb = async (payload: any) => {
-  const { search, min, max } = payload;
+  const { search, min, max, sort } = payload;
 
   const searchableFields = ['title', 'brand'];
   if (search) {
@@ -25,6 +25,10 @@ const getProductIntoDb = async (payload: any) => {
     return result;
   } else if (min && max) {
     const result = Product.find({ price: { $gte: min, $lte: max } });
+    return result;
+  } else if (sort) {
+    const sortOrder = sort === 'asc' ? 1 : -1;
+    const result = Product.find().sort({ price: sortOrder });
     return result;
   } else {
     const result = await Product.find({});
