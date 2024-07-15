@@ -9,7 +9,10 @@ const app: Application = express();
 
 app.use(
   cors({
-    origin: ['https://level-2-24-assignment-4-client.vercel.app'],
+    origin: [
+      'https://level-2-24-assignment-4-client.vercel.app',
+      'http://localhost:5173',
+    ],
     credentials: true,
   }),
 );
