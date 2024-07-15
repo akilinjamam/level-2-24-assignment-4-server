@@ -31,6 +31,9 @@ const getProductIntoDb = async (payload: any) => {
       price: sortOrder,
     });
     return result;
+  } else if (sort) {
+    const result = Product.find().sort({ price: sortOrder });
+    return result;
   } else {
     const result = await Product.find({});
     return result;
