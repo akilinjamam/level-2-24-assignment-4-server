@@ -11,6 +11,8 @@ router.post(
   productController.createProductIntoDb,
 );
 router.get('/', productController.getProductIntoDb);
+router.get('/minPrice', productController.getMinProductPriceIntoDb);
+router.get('/maxPrice', productController.getMaxProductPriceIntoDb);
 
 router.patch(
   '/:id',

@@ -14,12 +14,32 @@ const createProductIntoDb = catchAsync(async (req, res) => {
   });
 });
 const getProductIntoDb = catchAsync(async (req, res) => {
-  const result = await productService.getProductIntoDb();
+  const result = await productService.getProductIntoDb(req.query);
 
   sendRespone(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: 'product found successfully',
+    data: result,
+  });
+});
+const getMinProductPriceIntoDb = catchAsync(async (req, res) => {
+  const result = await productService.getMinProductPrice();
+
+  sendRespone(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Minimum product found successfully',
+    data: result,
+  });
+});
+const getMaxProductPriceIntoDb = catchAsync(async (req, res) => {
+  const result = await productService.getMaxProductPrice();
+
+  sendRespone(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Maximum product found successfully',
     data: result,
   });
 });
@@ -54,4 +74,6 @@ export const productController = {
   getProductIntoDb,
   updateProductIntoDb,
   deleteProductIntoDb,
+  getMinProductPriceIntoDb,
+  getMaxProductPriceIntoDb,
 };

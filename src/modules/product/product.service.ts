@@ -6,10 +6,44 @@ const createProductIntoDb = async (payload: TProductItem) => {
 
   return result;
 };
-const getProductIntoDb = async () => {
-  const result = await Product.find({});
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getProductIntoDb = async (payload: any) => {
+  const { search, min, max } = payload;
 
-  return result;
+  const searchableFields = ['title', 'brand'];
+  if (search) {
+    const searchValues = await Product.aggregate([
+      {
+        $match: {
+          $or: searchableFields?.map((item) => {
+            return { [item]: { $regex: search, $options: 'i' } };
+          }),
+        },
+      },
+    ]);
+    const result = searchValues;
+    return result;
+  } else if (min && max) {
+    const result = Product.find({ price: { $gte: min, $lte: max } });
+    return result;
+  } else {
+    const result = await Product.find({});
+    return result;
+  }
+};
+const getMinProductPrice = async () => {
+  const minPriceItem = await Product.findOne()
+    .sort({ price: 1 })
+    .limit(1)
+    .select('price');
+  return minPriceItem;
+};
+const getMaxProductPrice = async () => {
+  const maxPriceItem = await Product.findOne()
+    .sort({ price: -1 })
+    .limit(1)
+    .select('price');
+  return maxPriceItem;
 };
 
 const updateProductIntoDb = async (
@@ -31,4 +65,6 @@ export const productService = {
   getProductIntoDb,
   updateProductIntoDb,
   deleteProductIntoDb,
+  getMinProductPrice,
+  getMaxProductPrice,
 };
